@@ -4,48 +4,72 @@
 	<title></title>
 <link href='http://fonts.googleapis.com/css?family=Lato:400,300' rel='stylesheet' type='text/css'>	
 <link rel="stylesheet" type="text/css" href="../css/style.css">
+<link rel="stylesheet" href="../css/validationEngine.jquery.css" type="text/css"/>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-2.2.0.debug.js"></script>
+<script src="../js/languages/jquery.validationEngine-es.js" type="text/javascript" charset="utf-8">
+	</script>
+	<script src="../js/jquery.validationEngine.js" type="text/javascript" charset="utf-8">
+	</script>
 <script src="../js/jquery.maskedinput-1.3.js"></script>
 <script type="text/javascript">
 function sizingNavBar(qMenuItems){
 $("#barra>li").width(Math.ceil($("#navbarra").width()/qMenuItems));
 }
-function AppViewModel() {
-this.clieDetNom = ko.observable();
-this.clieDetCuit = ko.observable();
-this.clieDetCod = ko.observable();
-this.clieDetDom1= ko.observable();
-this.clieDetDom2= ko.observable();
-this.clieDetTel1=ko.observable();
-this.clieDetTel2=ko.observable();
-this.clieDetMovil1=ko.observable();
-this.clieDetMovil2=ko.observable();
-this.clieDetEmail1=ko.observable();
-this.clieDetEmail2=ko.observable();
-this.clieDetSitio=ko.observable();
-this.clieDetObs=ko.observable();
-
-this.clieDetFull = ko.computed(function() {
-return this.clieDetCod()+"\n"+this.clieDetDom1()+" "+this.clieDetDom2()+" "+this.clieDetTel1()+" "+this.clieDetTel2()+" "+this.clieDetMovil1()+" "+this.clieDetMovil2()+" "+this.clieDetEmail1()+" "+this.clieDetEmail2()+" "+this.clieDetSitio()+" "+this.clieDetObs();
-}, this);
-
-this.capitalizeLastName = function() {
-var currentVal = this.operApellido(); // Read the current value
-this.operApellido(currentVal.toUpperCase()); // Write back a modified value
+var DataVM= {
+clieNom:ko.observable(""),
+clieDetCuit:ko.observable(""),
+clieCod:ko.observable(""),
+clieDetDom1:ko.observable(""),
+clieDetDom2:ko.observable(""),
+clieDetTel1:ko.observable(""),
+clieDetTel2:ko.observable(""),
+clieDetMovil1:ko.observable(""),
+clieDetMovil2:ko.observable(""),
+clieDetEmail1:ko.observable(""),
+clieDetEmail2:ko.observable(""),
+clieDetSitio:ko.observable(""),
+clieDetObs:ko.observable("")
 };
-}
+
+DataVM.save = function() {
+console.log("Me llamaron");
+		  if($("#alta").validationEngine("validate")){
+		console.log("Me llamaron por 2º vez");
+        $.ajax("../libsphp/transacciones.php?actio=NewUser", {
+            data: ko.toJSON({datos: DataVM}),
+            type: "post", contentType: "application/json",
+            success: function(result) { 
+            alert(result);
+            DataVM.clieNom("");
+            DataVM.clieDetCuit("");
+            DataVM.clieCod("");
+            DataVM.clieDetDom1("");
+            DataVM.clieDetDom2("");
+            DataVM.clieDetTel1("");
+            DataVM.clieDetTel2("");
+            DataVM.clieDetMovil1("");
+            DataVM.clieDetMovil2("");
+            DataVM.clieDetEmail1("");
+            DataVM.clieDetEmail2("");
+            DataVM.clieDetSitio("");
+            DataVM.clieDetObs("");
+          }
+        });
+    }
+};
+
 
 // Activates knockout.js
 $(document).ready(function(){
 sizingNavBar(7);
 
+$("#alta").validationEngine(); 
  
 $('input:radio[name=tdoc]').click(function() {
 	$("#cuit").removeAttr('disabled');
 	if($(this).attr("value")=="CUIT"){
 		$("#cuit").mask('99-99999999-9');
-		alert('ACATOY');
 	}else{
 		$("#cuit").mask('99.999.999');
 	}
@@ -54,7 +78,7 @@ $('input:radio[name=tdoc]').click(function() {
 } ); 
  
  
-ko.applyBindings(new AppViewModel());
+ko.applyBindings(DataVM);
 }); 
 </script>
 </head>
@@ -88,21 +112,20 @@ ko.applyBindings(new AppViewModel());
                 <section id="main">
                 <div class="panel" >
                 <h1>Alta de Clientes</h1>
-                <form id="alta" method="GET" name="alta">
+                <form id="alta" name="alta">
                        <div id="lTable">   
                               <div class="fila">
     														<span class="celda etiq">Nombre de Cliente: </span>
     														<span class="celda">
-    																				<input class="inputspan" data-bind="value:clieDetNom"/>
+    																				<input class="validate[required] text-input inputspan" data-bind="value: DataVM.clieNom">
     														</span>
     									</div> 
     									<div class="fila">
-    					
-    					<span class="celda etiq"> Cuit: </span>
+    														<span class="celda etiq"> Cuit: </span>
     														<span class="celda">
-    																				<input id="cuit" class="inputspan" data-bind="value:clieDetCuit" disabled />
+    																				<input id="cuit" class="inputspan validate[required] text-input" data-bind="value: DataVM.clieDetCuit" disabled>
     														</span>
-    														<span class="celda">
+															<span class="celda">
     															<input type="radio" name="tdoc" value="CUIT"> CUIT
     															<input type="radio" name="tdoc" value="DNI"> DNI
     					</span>
@@ -110,73 +133,75 @@ ko.applyBindings(new AppViewModel());
     									<div class="fila">
     														<span class="celda etiq">C&oacute;digo de Cliente: </span>
     														<span class="celda">
-    																				<input class="inputspan" data-bind="value:clieDetCod"/>
+    																				<input class="inputspan validate[required] text-input" data-bind="value: DataVM.clieCod">
     														</span>
     									</div>
     									<div class="fila">
     														<span class="celda etiq">Domicilio Principal: </span>
     														<span class="celda">
-    																				<input class="inputspan" data-bind="value:clieDetDom1"/>
+    																				<input class="inputspan validate[required] text-input" data-bind="value: DataVM.clieDetDom1">
     														</span>
     									</div>
     									<div class="fila">
     														<span class="celda etiq">Domicilio Secundario: </span>
     														<span class="celda">
-    																				<input class="inputspan" data-bind="value:clieDetDom2"/>
+    																				<input class="inputspan" data-bind="value: DataVM.clieDetDom2">
     														</span>
     									</div>
     									<div class="fila">
     														<span class="celda etiq">Tel&eacute;fono 1:</span>
     														<span class="celda">
-    																				<input class="inputspan" data-bind="value:clieDetTel1"/>
+    																				<input class="inputspan" data-bind="value: DataVM.clieDetTel1">
     														</span>
     									</div>
     									<div class="fila">
     														<span class="celda etiq">Tel&eacute;fono 2:</span>
     														<span class="celda">
-    																				<input class="inputspan" data-bind="value:clieDetTel2"/>
+    																				<input class="inputspan" data-bind="value: DataVM.clieDetTel2">
     														</span>
     									</div>
     									<div class="fila">
     														<span class="celda etiq">M&oacute;vil 1:</span>
     														<span class="celda">
-    																				<input class="inputspan" data-bind="value:clieDetMovil1"/>
+    																				<input class="inputspan" data-bind="value: DataVM.clieDetMovil1">
     														</span>
     									</div>
     									<div class="fila">
     															<span class="celda etiq">M&oacute;vil 2:</span>
     															<span class="celda">
-    																					<input class="inputspan" data-bind="value:clieDetMovil2"/>
+    																					<input class="inputspan" data-bind="value: DataVM.clieDetMovil2">
     															</span>
     									</div>
     									<div class="fila">
     														<span class="celda etiq">Email Principal:</span>
     														<span class="celda">
-    																				<input class="inputspan" data-bind="value:clieDetEmail1"/>
+    																				<input class="inputspan validate[custom[email]] text-input" data-bind="value: DataVM.clieDetEmail1">
     														</span>
     									</div>
     									<div class="fila">
     														<span class="celda etiq">Email Alternativo:</span>
     														<span class="celda">
-    																				<input class="inputspan" data-bind="value:clieDetEmail2"/>
+    																				<input class="inputspan validate[custom[email]] text-input" data-bind="value: DataVM.clieDetEmail2">
     														</span>
     									</div>
     									<div class="fila">
     														<span class="celda etiq">Sitio Web:</span>
     														<span class="celda">
-    																				<input class="inputspan" data-bind="value:clieDetSitio"/>
+    																				<input class="inputspan" data-bind="value: DataVM.clieDetSitio">
     														</span>
     									</div>
     									<div class="fila">
     														<span class="celda etiq">Observaciones:</span>
     														<span class="celda">
-    																				<input class="inputspan" data-bind="value:clieDetObs"/>
+    																				<input class="inputspan" data-bind="value: DataVM.clieDetObs">
     														</span>
     									</div>
+    									
   								</div><!-- Fin de lTable -->
+  								<button class="submit" data-bind="click: save"> Guardar</button>
   								</form>
-  						</div><!-- End of #panel -->
-  					 <p><span data-bind= "text: clieDetFull" ></span></p>
+  								</div><!-- End of #panel -->
+  					 
                 </section>
                        
 <footer id="footer"><!-- pie-->
