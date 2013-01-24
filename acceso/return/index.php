@@ -8,7 +8,7 @@ $client = new Google_Client();
 $client->setApplicationName("Google UserInfo PHP Starter Application");
 $oauth2 = new Google_Oauth2Service($client);
 
-$client->setRedirectUri('http://localhost/juan/prinet/welcome.html');
+$client->setRedirectUri('http://localhost/conecta/prinet/welcome.html');
 if (isset($_GET['code'])) {
     $client->authenticate($_GET['code']);
 	unset($_SESSION['audit_first']);

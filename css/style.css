@@ -188,7 +188,7 @@ border-right: 0 none !important;
 border-radius: 0 8px 8px 0;
 }
 
-li:hover,li:active {
+#barra li:hover{
 background: #969696; /* Old browsers */
 background: -moz-linear-gradient(top,  #969696 0%, #828282 50%, #787878 51%, #7a7a7a 100%); /* FF3.6+ */
 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#969696), color-stop(50%,#828282), color-stop(51%,#787878), color-stop(100%,#7a7a7a)); /* Chrome,Safari4+ */
@@ -301,7 +301,21 @@ margin-left: 15px;
 width: 300px;
 padding: 2px 12px;	
 }
+.inputspan:focus{
+	background-color: #ffc557;
+}
+.jarselect{
+	width:326px;
+	margin-left: 15px;
+}
+.jarselect option:first-child{
+	color:#98a5b2;
+}
 
+#infoInput{
+	clear: both;
+	float: right;
+}
 .submit{
  		width: 287px;
  		height: 2.4em;
@@ -326,7 +340,8 @@ background-image: linear-gradient(top, #000000 0%, #efefef 50%,white 100%);
  	box-shadow: 0px 0px 0px;
  	}
 #footer {
-	
+	background-color: #5e5e60;
+	display: box;
 }
 
 #contenedor {

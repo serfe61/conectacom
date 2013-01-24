@@ -25,12 +25,7 @@ function NewUser()
     $obs = $datos->clieDetObs;
 
     if (!empty($nombre) && !empty($cuit) && !empty($cod) && !empty($dom1)) {
-        $pdo = new PDO(
-            'mysql:host=127.0.0.1;dbname=juan;port=3306', 'root', '',
-            array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8")
-            );
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
+        $pdo=DBConn();
         $sqlInsert = <<<JAR
 INSERT INTO `clientes` (`clientes_cod`, `clientes_nombre`) VALUES
 (:cod,:nombre);
@@ -74,6 +69,30 @@ JAR;
 
         }
     }
+}
+
+function FillSelect(){
+	$pdo=DBConn();
+	$sqlStrQuery=<<<JAR
+SELECT operadoras_id, operadoras_nombre FROM operadoras WHERE 1;
+JAR;
+	$sqlQuery=$pdo->query($sqlStrQuery, PDO::FETCH_ASSOC);
+	header("Content-type: application/json");
+	print json_encode($sqlQuery->fetchAll());
+}
+/**
+* Funciones Auxiliares
+*
+*
+* */
+
+function DBConn(){
+	$pdo = new PDO(
+            'mysql:host=127.0.0.1;dbname=juan;port=3306', 'root', '',
+            array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8")
+            );
+	$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	return $pdo;
 }
 function soloMessage($message)
 {

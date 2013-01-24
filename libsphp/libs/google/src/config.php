@@ -27,8 +27,8 @@ $apiConfig = array(
     // OAuth2 Settings, you can get these keys at https://code.google.com/apis/console
     'oauth2_client_id' => '27290396115.apps.googleusercontent.com',
     'oauth2_client_secret' => 'bCC36LqVeeFaHHQOsymfs2JL',
-    'oauth2_redirect_uri' => 'http://localhost/juan/acceso/return',
-
+    //'oauth2_redirect_uri' => 'http://localhost/juan/acceso/return',
+    'oauth2_redirect_uri' => 'http://localhost/conecta/acceso/return/',
     // The developer key, you get this at https://code.google.com/apis/console
     'developer_key' => '',
 

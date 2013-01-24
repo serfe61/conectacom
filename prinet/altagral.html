@@ -18,19 +18,11 @@ $("#barra>li").width(Math.ceil($("#navbarra").width()/qMenuItems));
 }
 var DataVM= {
 clieNom:ko.observable(""),
-clieDetCuit:ko.observable(""),
 clieCod:ko.observable(""),
-clieDetDom1:ko.observable(""),
-clieDetDom2:ko.observable(""),
-clieDetTel1:ko.observable(""),
-clieDetTel2:ko.observable(""),
-clieDetMovil1:ko.observable(""),
-clieDetMovil2:ko.observable(""),
-clieDetEmail1:ko.observable(""),
-clieDetEmail2:ko.observable(""),
-clieDetSitio:ko.observable(""),
 clieDetObs:ko.observable("")
 };
+
+DataVM.emprOp=ko.observableArray();
 
 DataVM.save = function() {
 			var tmpCuit = ($("#cuit").val()? $("#cuit").mask():"");
@@ -43,23 +35,17 @@ DataVM.save = function() {
             success: function(result) { 
             alert(result);
             DataVM.clieNom("");
-            DataVM.clieDetCuit("");
             DataVM.clieCod("");
-            DataVM.clieDetDom1("");
-            DataVM.clieDetDom2("");
-            DataVM.clieDetTel1("");
-            DataVM.clieDetTel2("");
-            DataVM.clieDetMovil1("");
-            DataVM.clieDetMovil2("");
-            DataVM.clieDetEmail1("");
-            DataVM.clieDetEmail2("");
-            DataVM.clieDetSitio("");
             DataVM.clieDetObs("");
           }
         });
     }
 };
 
+$.getJSON("../libsphp/transacciones.php?actio=FillSelect", function(data){
+	DataVM.emprOp(data);
+	console.log(DataVM.emprOp()[0]);
+});
 
 // Activates knockout.js
 $(document).ready(function(){
@@ -122,73 +108,16 @@ ko.applyBindings(DataVM);
     														</span>
     									</div> 
     									<div class="fila">
-    														<span class="celda etiq"> Cuit: </span>
-    														<span class="celda">
-    																				<input id="cuit" class="inputspan validate[required] text-input" disabled>
-    														</span>
-															<span class="celda">
-    															<input type="radio" name="tdoc" value="CUIT"> CUIT
-    															<input type="radio" name="tdoc" value="DNI"> DNI
-    					</span>
-    									</div>
-    									<div class="fila">
     														<span class="celda etiq">C&oacute;digo de Cliente: </span>
     														<span class="celda">
     																				<input class="inputspan validate[required] text-input" data-bind="value: DataVM.clieCod">
     														</span>
     									</div>
+    									
     									<div class="fila">
-    														<span class="celda etiq">Domicilio Principal: </span>
+    														<span class="celda etiq">Empresa</span>
     														<span class="celda">
-    																				<input class="inputspan validate[required] text-input" data-bind="value: DataVM.clieDetDom1">
-    														</span>
-    									</div>
-    									<div class="fila">
-    														<span class="celda etiq">Domicilio Secundario: </span>
-    														<span class="celda">
-    																				<input class="inputspan" data-bind="value: DataVM.clieDetDom2">
-    														</span>
-    									</div>
-    									<div class="fila">
-    														<span class="celda etiq">Tel&eacute;fono 1:</span>
-    														<span class="celda">
-    																				<input class="inputspan" data-bind="value: DataVM.clieDetTel1">
-    														</span>
-    									</div>
-    									<div class="fila">
-    														<span class="celda etiq">Tel&eacute;fono 2:</span>
-    														<span class="celda">
-    																				<input class="inputspan" data-bind="value: DataVM.clieDetTel2">
-    														</span>
-    									</div>
-    									<div class="fila">
-    														<span class="celda etiq">M&oacute;vil 1:</span>
-    														<span class="celda">
-    																				<input class="inputspan" data-bind="value: DataVM.clieDetMovil1">
-    														</span>
-    									</div>
-    									<div class="fila">
-    															<span class="celda etiq">M&oacute;vil 2:</span>
-    															<span class="celda">
-    																					<input class="inputspan" data-bind="value: DataVM.clieDetMovil2">
-    															</span>
-    									</div>
-    									<div class="fila">
-    														<span class="celda etiq">Email Principal:</span>
-    														<span class="celda">
-    																				<input class="inputspan validate[custom[email]] text-input" data-bind="value: DataVM.clieDetEmail1">
-    														</span>
-    									</div>
-    									<div class="fila">
-    														<span class="celda etiq">Email Alternativo:</span>
-    														<span class="celda">
-    																				<input class="inputspan validate[custom[email]] text-input" data-bind="value: DataVM.clieDetEmail2">
-    														</span>
-    									</div>
-    									<div class="fila">
-    														<span class="celda etiq">Sitio Web:</span>
-    														<span class="celda">
-    																				<input class="inputspan" data-bind="value: DataVM.clieDetSitio">
+    																				<select class="jarselect" data-bind="options: DataVM.emprOp(),optionsValue:'operadoras_id',optionsText: 'operadoras_nombre',optionsCaption:'Seleccione una empresa'"></select>
     														</span>
     									</div>
     									<div class="fila">
